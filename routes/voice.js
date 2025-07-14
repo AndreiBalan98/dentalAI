@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
                 content: welcomeMessage
             });
 
-            conversationManager.logMessage(callSid, 'AI_VOICE', aiResponse);
+            conversationManager.logMessage(callSid, 'AI_VOICE', welcomeMessage);
             
             twiml.say({
                 voice: 'Polly.Carmen',
