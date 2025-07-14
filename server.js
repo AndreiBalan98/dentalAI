@@ -1,32 +1,25 @@
-// 1. Importăm dependențele
 const express = require('express');
 const twilio = require('twilio');
 const axios = require('axios');
 require('dotenv').config();
 
-// 2. Inițializăm Express
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 
-// 3. Configurăm portul
 const PORT = process.env.PORT || 3000;
 
-// 4. Endpoint pentru verificare că serverul funcționează
 app.get('/', (req, res) => {
     res.send('Server-ul pentru asistent AI funcționează!');
 });
 
-// 5. Endpoint-ul principal pentru apeluri
 app.post('/voice', async (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
     
-    // Salutăm persoana
     twiml.say({
-        voice: 'Polly.Carmen', // Voce românească
+        voice: 'Polly.Carmen',
         language: 'ro-RO'
     }, 'Bună ziua! Cu ce vă pot ajuta?');
     
-    // Ascultăm ce spune persoana
     const gather = twiml.gather({
         input: 'speech',
         language: 'ro-RO',
@@ -38,7 +31,6 @@ app.post('/voice', async (req, res) => {
     res.send(twiml.toString());
 });
 
-// Endpoint pentru procesarea a ceea ce a spus persoana
 app.post('/process-speech', async (req, res) => {
     const twiml = new twilio.twiml.VoiceResponse();
     
@@ -82,7 +74,6 @@ app.post('/process-speech', async (req, res) => {
     res.send(twiml.toString());
 });
 
-// Funcția care obține răspuns de la AI
 async function getAIResponse(userMessage) {
     console.log('📤 Trimit către OpenRouter:', userMessage);
     
@@ -99,14 +90,14 @@ async function getAIResponse(userMessage) {
                     content: userMessage
                 }
             ],
-            max_tokens: 150,
+            max_tokens: 1000,
             temperature: 0.7
         }, {
             headers: {
                 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
                 'Content-Type': 'application/json',
-                'HTTP-Referer': 'https://clinica-dentara.com',
-                'X-Title': 'Asistent Clinica Dentara'
+                'HTTP-Referer': '',
+                'X-Title': 'dentalAI'
             }
         });
         
@@ -122,7 +113,6 @@ async function getAIResponse(userMessage) {
     }
 }
 
-// 6. Pornim serverul
 app.listen(PORT, () => {
     console.log(`Serverul ascultă pe portul ${PORT}`);
 });
