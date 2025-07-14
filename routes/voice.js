@@ -1,3 +1,4 @@
+const logger = require('../services/logger');
 const express = require('express');
 const router = express.Router();
 const twilio = require('twilio');
@@ -23,6 +24,8 @@ router.post('/', async (req, res) => {
                 role: 'assistant',
                 content: welcomeMessage
             });
+
+            conversationManager.logMessage(callSid, 'AI_VOICE', aiResponse);
             
             twiml.say({
                 voice: 'Polly.Carmen',
@@ -34,6 +37,8 @@ router.post('/', async (req, res) => {
                 role: 'user',
                 content: speechResult
             });
+
+            conversationManager.logMessage(callSid, 'USER_VOICE', speechResult);
             
             const aiResponse = await aiService.getResponse(conversation);
             
@@ -41,6 +46,8 @@ router.post('/', async (req, res) => {
                 role: 'assistant',
                 content: aiResponse
             });
+
+            conversationManager.logMessage(callSid, 'AI_VOICE', aiResponse);
             
             twiml.say({
                 voice: 'Polly.Carmen',

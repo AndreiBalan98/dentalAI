@@ -1,3 +1,4 @@
+const logger = require('../services/logger');
 const express = require('express');
 const router = express.Router();
 const twilio = require('twilio');
@@ -24,6 +25,8 @@ router.post('/', async (req, res) => {
             role: 'user',
             content: body
         });
+
+        conversationManager.logMessage(messageSid, 'USER_SMS', body);
         
         // Obține răspunsul AI
         const aiResponse = await aiService.getResponse(conversation);
@@ -32,6 +35,8 @@ router.post('/', async (req, res) => {
             role: 'assistant',
             content: aiResponse
         });
+
+        conversationManager.logMessage(messageSid, 'AI_SMS', aiResponse);
         
         // Trimite răspunsul
         twiml.message(aiResponse);

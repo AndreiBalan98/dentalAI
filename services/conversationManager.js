@@ -1,3 +1,5 @@
+const logger = require('./logger');
+
 class ConversationManager {
     constructor() {
         this.conversations = new Map();
@@ -15,6 +17,7 @@ class ConversationManager {
         
         this.conversations.set(id, conversation);
         console.log(`📞 Conversație nouă creată: ${id} (${type})`);
+        logger.info(`CONV_START | ${type.toUpperCase()} | ID: ${id} | Phone: ${phoneNumber}`);
         return conversation;
     }
     
@@ -43,6 +46,7 @@ class ConversationManager {
         const conversation = this.conversations.get(id);
         if (conversation) {
             console.log(`🔚 Conversație încheiată: ${id}`);
+            logger.info(`CONV_END | ID: ${id} | Duration: ${Math.round((new Date() - conversation.startTime) / 1000)}s`);
             console.log(`📝 Istoric conversație:`, conversation.messages);
             this.conversations.delete(id);
         }
@@ -57,6 +61,13 @@ class ConversationManager {
             if (now - conversation.startTime > maxAge) {
                 this.endConversation(id);
             }
+        }
+    }
+
+    logMessage(conversationId, sender, message) {
+        const conversation = this.conversations.get(conversationId);
+        if (conversation) {
+            logger.info(`${sender} | ID: ${conversationId} | "${message}"`);
         }
     }
 }
