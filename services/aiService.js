@@ -25,14 +25,14 @@ class AIService {
             const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
                 model: this.model,
                 messages: messages,
-                max_tokens: 200,
+                max_tokens: 500,
                 temperature: 0.7
             }, {
                 headers: {
                     'Authorization': `Bearer ${this.apiKey}`,
                     'Content-Type': 'application/json',
                     'HTTP-Referer': process.env.APP_URL || 'http://localhost:3000',
-                    'X-Title': 'DentalAI - Clinica Dinți de Fier'
+                    'X-Title': 'DentalAI - Clinica Dinti de Fier'
                 }
             });
             
